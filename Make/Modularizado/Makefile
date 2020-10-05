@@ -9,14 +9,14 @@ CC=gcc
 
 all:${PROY}
 
-${PROY}.o:${PROY}.c
-	@${CC} ${COBJ} ${PROY}.c ${CFLAGS}
-${PROCF}.o:${PROCF}.c
-	@${CC} ${COBJ} ${PROCF}.c ${CFLAGS}
-${ARCHF}.o:${ARCHF}.c
-	@${CC} ${COBJ} ${ARCHF}.c ${CFLAGS}
+# % es cualaquier archivo en la carpeta 
+%.o:%.c
+	${CC} ${COBJ} $<  ${CFLAGS}
+# $< regresa la primer dependencia
+
 ${PROY}:${PROY}.o ${PROCF}.o ${ARCHF}.o
-	@${CC} ${PROY}.o ${PROCF}.o ${ARCHF}.o -o ${PROY} ${LINKF} 
+	${CC} $^ -o $@ ${LINKF}  
+# $^ Regresa la lista de dependencias completa
 
 .PHONY:clean
 
