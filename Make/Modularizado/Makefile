@@ -6,6 +6,8 @@ CFLAGS=-Wall
 COBJ=-c
 LINKF=-lm
 CC=gcc
+ORIGFILES=$(wildcard *.c)
+OBJFILES=$(ORIGFILES:.c=.o)
 
 all:${PROY}
 
@@ -14,7 +16,7 @@ all:${PROY}
 	${CC} ${COBJ} $<  ${CFLAGS}
 # $< regresa la primer dependencia
 
-${PROY}:${PROY}.o ${PROCF}.o ${ARCHF}.o
+${PROY}:${OBJFILES}
 	${CC} $^ -o $@ ${LINKF}  
 # $^ Regresa la lista de dependencias completa
 
