@@ -13,7 +13,10 @@ int main () {
 	register int np=0;
 	pid_t pid;
 	int* datos;
-	
+
+	printf("Tarea de Procesos");	
+
+	srand(getpid());
 	datos = reservarMemoria();	
 	llenarArreglo(datos);
 	imprimirArreglo(datos);
