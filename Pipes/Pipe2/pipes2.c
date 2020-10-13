@@ -7,19 +7,23 @@
 #define NUM_PROC 4
 
 void procesoHijo(int,int* );
-void procesoPadre(int*);
+void procesoPadre(int[][2]);
 
 int main () {
 	register int np=0;
 	pid_t pid;
-	int pipefd[2],estado;
-	printf("Probando Procesos...\n");
+	int pipefd[NUM_PROC][2],estado;
+
+	printf("Probando Pipes...\n");
 	
-	estado = pipe(pipefd);	
-	if (estado == -1 ){
-		perror("Error al crear el pipe\n");
-		exit(EXIT_FAILURE);	
+	for(int npi = 0; npi < NUM_PROC ;npi++){
+		estado = pipe(pipefd[npi]);	
+		if (estado == -1 ){
+			perror("Error al crear el pipe\n");
+			exit(EXIT_FAILURE);	
+		}
 	}
+	
 	for(np = 0;np < NUM_PROC; np++){
 		pid = fork();
 		if (pid == -1) {
@@ -29,7 +33,7 @@ int main () {
 	
 		if(!pid){
 			
-			procesoHijo(np,pipefd);
+			procesoHijo(np,pipefd[np]);
 		}
 	}
 	
@@ -38,13 +42,13 @@ int main () {
 
 }
 
-void procesoPadre(int *pipefd){
+void procesoPadre(int pipefd[][2]){
 	pid_t pid;
 	int status,numproc,res;
-	close(pipefd[1]);
 	for (register int np=0;np < NUM_PROC;np++){
+		close(pipefd[np][1]);
 		pid = wait(&status);
-		read(pipefd[0],&res,sizeof(int));
+		read(pipefd[np][0],&res,sizeof(int));
 		numproc = status >> 8;
 		if (numproc == 0){
 			printf("Termino el proceso %d, \n",numproc);	
@@ -60,8 +64,9 @@ void procesoPadre(int *pipefd){
 			printf("La divi %d \n",res);
 		}
 		printf("Proceso hijo %d con pid: %d, regresa: %d \n",np,pid,status>>8);
+
+		close(pipefd[np][0]);
 	}
-	close(pipefd[0]);
 }	
 
 void procesoHijo(int np,int* pipefd) {
