@@ -31,7 +31,7 @@ void imprimirArreglo(int* datos){
 	for(register int n=0; n<N ; n++){
 		if(!(n%16))
 			printf("\n");
-		printf("%3d ",*(datos+n));
+		printf("%5d ",*(datos+n));
 	}
 	printf("\n");
 }
